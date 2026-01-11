@@ -1,0 +1,38 @@
+# Задание 3: Циклы 
+
+import math
+
+def take_input():
+    d1 = float(input('Введите кратчайшее расстояние от спасателя до кромки воды в ярдах: '))
+    d2 = float(input('Введите кратчайшее расстояние от утопающего до берега в футах: '))
+    h = float(input('Введите боковое смещение между спасателем и утопающим в ярдах: '))
+    v_sand = float(input('Введите скорость движения спасателя по песку в милях в час: '))
+    n = float(input('Введите коэффициент замедления спасателя при движении в воде: '))
+    return d1, d2, h, v_sand, n 
+
+def time_save(d1, d2, h, v_sand, n, theta):
+    yard_to_foot = 3           
+    mile_to_foot = 5280        
+    x = yard_to_foot * d1 * math.tan(math.radians(theta))  
+    L1 = math.sqrt(x**2 + (yard_to_foot * d1)**2)           
+    L2 = math.sqrt((yard_to_foot * h - x)**2 + d2**2)     
+    t = (1 / (mile_to_foot * v_sand / 3600)) * (L1 + L2 * n) 
+    return t
+    
+d1, d2, h, v_sand, n = take_input()
+
+best_theta = None
+best_time = float('inf')
+
+step = 0.1
+for theta in range(0, 910):
+    current_theta = theta * step
+    current_time = time_save(d1, d2, h, v_sand, n, current_theta)
+    if current_time < best_time:
+        best_time = current_time
+        best_theta = current_theta
+
+def print_output(best_theta, best_time):
+    print(f'Если спасатель начнет движение под углом {best_theta:.1f} градусов, то он достигнет утопающего за {best_time:.1f} секунды')
+
+print_output(best_theta, best_time)
